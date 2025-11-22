@@ -227,7 +227,8 @@ li {
   background: linear-gradient(to bottom, #4B4D4F, #4B4D4F33);
   padding: 0.125rem;
   border-radius: 1rem;
-  width: fit-content;
+  
+  
 }
 
 .card {
@@ -235,6 +236,46 @@ li {
   border-radius: 1rem;
   min-height: 100%;
 }
+
+.card-interview {
+  background: linear-gradient(180deg, #12142b 0%, #08090d 100%);
+  border-radius: 1rem;       /* rounded-2xl */
+  min-height: 100%;
+  display: flex;             /* flex */
+  flex-direction: column;    /* flex-col */
+  padding: 1.5rem;           /* p-6 */
+  position: relative;
+  overflow: hidden;
+  gap: 2.5rem;               /* gap-10 */
+  justify-content: space-between;
+}
+
+
+
+/* -----------------------------------------
+   CARD CTA (CALLOUT / PROMO BANNER)
+------------------------------------------ */
+.card-cta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* width: fit-content;  */
+  padding: 1.5rem 4rem; 
+  border-radius: 1.5rem; 
+
+  background: linear-gradient(to bottom, #171532, #08090D); /* blue-gradient-dark */
+
+  gap: 1rem; /* implicit spacing like justify-between with content gap */
+}
+
+@media (max-width: 640px) {
+  .card-cta {
+    padding: 1.5rem 1rem; /* max-sm:px-4 */
+  }
+}
+
+
 
 /* -----------------------------------------
    LAYOUT UTILITIES
@@ -302,4 +343,35 @@ li {
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+
+.mask-img {
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+  mask-size: cover;
+  mask-repeat: no-repeat;
+}
+
+.badge-text {
+  font-size: 0.875rem;   /* text-sm */
+  font-weight: 600;      /* font-semibold */
+  text-transform: capitalize;
+}
+
+.tech-tooltip {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 0.25rem; /* mb-1 */
+  display: none; /* hidden by default */
+  padding: 0.25rem 0.5rem; /* px-2 py-1 */
+  font-size: 0.75rem; /* text-xs */
+  color: white; /* text-white */
+  background-color: #374151; /* bg-gray-700 */
+  border-radius: 0.375rem; /* rounded-md */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.25); /* shadow-md */
+}
+
+/* Visible on hover */
+.group:hover .tech-tooltip {
+  display: flex;
 }

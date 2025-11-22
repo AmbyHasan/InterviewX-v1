@@ -38,6 +38,7 @@ interface User {
   id: string;
 }
 
+//for the interview card which is displayed at the home page
 interface InterviewCardProps {
   interviewId?: string;
   userId?: string;
@@ -94,6 +95,7 @@ interface InterviewFormProps {
   amount: number;
 }
 
+//for displaying the tech icons in InterviewCard
 interface TechIconProps {
   techStack: string[];
 }
