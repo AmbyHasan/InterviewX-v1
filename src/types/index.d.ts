@@ -1,3 +1,5 @@
+import NextAuth, { DefaultSession } from "next-auth";
+
 interface Feedback {
   id: string;
   interviewId: string;
@@ -98,4 +100,24 @@ interface InterviewFormProps {
 //for displaying the tech icons in InterviewCard
 interface TechIconProps {
   techStack: string[];
+}
+
+
+declare module "next-auth" {
+  interface Session {
+    user: {
+      _id: string;
+      email: string;
+      name: string;
+      image?: string | null;
+    } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    _id: string;
+    email: string;
+    name: string;
+  }
 }

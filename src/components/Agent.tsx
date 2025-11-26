@@ -1,7 +1,10 @@
 "use client";
 
 import Image from 'next/image'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { AgentProps } from '../types';
+import { useRouter } from 'next/router';
+import {vapi} from "@/lib/vapi.sdk"
 
 
 enum CallStatus{
@@ -11,16 +14,66 @@ enum CallStatus{
   FINISHED="FINISHED"
 }
 
+interface SavedMessage{
+  role:"user" | "system" | "assistant";
+  content:string
+}
 
 
-const Agent = ({userName}:AgentProps) => {
-  const isSpeaking=false;
-  const callStatus=CallStatus.FINISHED;
-  const messages=[
-    "what is your name",
-    "my name is amber" ,
-    "nice to meet you"
-  ]
+const Agent = ({userName ,userId ,type}:AgentProps) => {
+
+  const router=useRouter();
+  const [isSpeaking ,setIsSpeaking]=useState(false);
+  const [callStatus , setCallStatus]=useState<CallStatus>(CallStatus.INACTIVE);
+  const [messages , setMessages]=useState<SavedMessage[]>([]);
+
+  useEffect(()=>{
+    const onCallStart=()=>setCallStatus(CallStatus.ACTIVE);
+    const onCallEnd=()=>setCallStatus(CallStatus.FINISHED);
+
+
+    const onMessage=(message:Message)=>{
+      if(message.type==="transcript" && message.transcriptType==="final"){
+        const newMessage={role:message.role  , content: message.transcript}
+
+        setMessages((prev)=> [...prev ,  newMessage]);
+
+      }
+    }
+
+    const onSpeechStart=()=>setIsSpeaking(true);
+    const onSpeechEnd=()=>setIsSpeaking(false);
+
+    const onError=(error : Error)=> console.log("Error" , error)
+
+    vapi.on("call-start" , onCallStart);
+    vapi.on("call-end" ,onCallEnd);
+    vapi.on("message" ,onMessage);
+    vapi.on("speech-end" ,onSpeechEnd);
+    vapi.on("error" , onError );
+
+    return ()=>{
+    vapi.off("call-start" , onCallStart);
+    vapi.off("call-end" ,onCallEnd);
+    vapi.off("message" ,onMessage);
+    vapi.off("speech-end" ,onSpeechEnd);
+    vapi.off("error" , onError );
+    }
+  } ,[])
+
+  useEffect(()=>{
+      if(callStatus==CallStatus.FINISHED) router.push("/");
+  } ,[messages ,callStatus , type , userId]);
+
+
+  const handleCall=async()=>{
+    setCallStatus(CallStatus.CONNECTING);
+
+  }
+
+
+
+  
   const lastMessage=messages[messages.length-1];
 
   return (

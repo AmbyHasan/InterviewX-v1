@@ -4,9 +4,9 @@ import Interview from "@/src/models/Interview";
 import {google} from "@ai-sdk/google";
 import { generateText } from 'ai';
 
+//api for generating the questions based on the inputs given by the user to vapi
 
-
-
+//this post request  will be hit by vapi which will collect the data regarding what type of interview the user wants to appear in
 export async function POST(request:Request){
     const {type , role , level , techstack ,amount , userid}=await request.json();
 
@@ -46,9 +46,7 @@ export async function POST(request:Request){
 
    
 
-    return Response.json({ success: true ,
-                        message:interview
-     }, { status: 200 });
+    return Response.json({ success: true }, { status: 200 });
 
     
   } catch (error) {
@@ -61,7 +59,7 @@ export async function POST(request:Request){
 export async function GET() {
   await dbConnect();
   const interviews = await Interview.find();
-  return Response.json({ success: true, data: interviews }, { status: 200 });
+  return Response.json({ success: true }, { status: 200 });
 }
 
 
