@@ -30,13 +30,28 @@ export async function POST(request:Request){
     `,
     });
 
+    // Clean AI output
+let cleaned = questions.replace(/[\n\r]/g, "").trim();
+
+if (!cleaned.startsWith("[")) cleaned = "[" + cleaned;
+if (!cleaned.endsWith("]")) cleaned = cleaned + "]";
+
+let parsedQuestions;
+try {
+  parsedQuestions = JSON.parse(cleaned);
+} catch (e) {
+  console.error("Failed to parse questions:", cleaned);
+  throw e;
+}
+
+
     const interview = await Interview.create({
       role: role,
       type: type,
       level: level,
       amount:amount ,
       techstack: techstack.split(",") ,
-      questions: JSON.parse(questions), //the ai will return the questions in string format , we are parsing it into an array
+      questions: parsedQuestions, //the ai will return the questions in string format , we are parsing it into an array
       userId: userid,
       finalized: true,
       coverImage: getRandomInterviewCover(), //cover image of the company by which we are getting interviewed ,this function will directly return us the link so we do not need cloudinary or multer
