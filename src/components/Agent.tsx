@@ -4,7 +4,8 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import { AgentProps } from '../types';
 import { useRouter } from 'next/router';
-import {vapi} from "@/lib/vapi.sdk"
+import { vapi } from '../lib/vapi.sdk';
+
 
 
 enum CallStatus{
@@ -25,7 +26,7 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
   const router=useRouter();
   const [isSpeaking ,setIsSpeaking]=useState(false);
   const [callStatus , setCallStatus]=useState<CallStatus>(CallStatus.INACTIVE);
-  const [messages , setMessages]=useState<SavedMessage[]>([]);
+  // const [messages , setMessages]=useState<SavedMessage[]>([]);
 
   useEffect(()=>{
     const onCallStart=()=>setCallStatus(CallStatus.ACTIVE);
@@ -36,7 +37,7 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
       if(message.type==="transcript" && message.transcriptType==="final"){
         const newMessage={role:message.role  , content: message.transcript}
 
-        setMessages((prev)=> [...prev ,  newMessage]);
+        // setMessages((prev)=> [...prev ,  newMessage]);
 
       }
     }
@@ -61,9 +62,9 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
     }
   } ,[])
 
-  useEffect(()=>{
-      if(callStatus==CallStatus.FINISHED) router.push("/");
-  } ,[messages ,callStatus , type , userId]);
+  // useEffect(()=>{
+  //     if(callStatus==CallStatus.FINISHED) router.push("/");
+  // } ,[messages ,callStatus , type , userId]);
 
 
   const handleCall=async()=>{
@@ -72,7 +73,7 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
   }
 
 
-
+  const messages=["hi i am amber" ,"hi how are you"]
   
   const lastMessage=messages[messages.length-1];
 
@@ -92,7 +93,7 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
           <Image src="/user-avatar.png" alt="user avatar" width={200} height={200}className="object-cover rounded-full" />
           {isSpeaking && <span className="animate-speak"/>}
           </div>
-          <h3>You{userName}</h3>
+          <h3>{userName}</h3>
         </div>
          </div>
     
