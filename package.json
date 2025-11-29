@@ -22,6 +22,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "clx": "^1.0.0",
     "dayjs": "^1.11.19",
     "lucide-react": "^0.554.0",
     "mongoose": "^9.0.0",

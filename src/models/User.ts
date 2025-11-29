@@ -47,7 +47,7 @@ export default UserModel;
 
 //for extracting the current user from the sessions
 export  async function getCurrentUser(){
-    await dbConnect();
+  await dbConnect();
     const session=await getServerSession(authOptions);
    const userId = session?.user?._id;
    if (!userId) return null;

@@ -11,16 +11,7 @@ import { authOptions } from "../../auth/[...nextauth]/options";
 //this post request  will be hit by vapi which will collect the data regarding what type of interview the user wants to appear in
 export async function POST(request:Request){
 
-const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?._id) {
-    return Response.json({ success: false, error: "Not authenticated" }, { status: 401 });
-  }
-
-  const userid = session.user._id; // ⭐ Get user ID from NextAuth JWT
-
-
-    const {type , role , level , techstack ,amount }=await request.json();
+    const {type , role , level , techstack ,amount ,userid }=await request.json();
 
      await dbConnect();
   try {

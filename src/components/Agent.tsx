@@ -3,8 +3,9 @@
 import Image from 'next/image'
 import { useEffect, useState } from 'react';
 import { AgentProps } from '../types';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import { vapi } from '../lib/vapi';
+import { cn } from '../lib/utils';
 
 
 
@@ -21,23 +22,27 @@ interface SavedMessage{
 }
 
 
+
+
 const Agent = ({userName ,userId ,type}:AgentProps) => {
 
   const router=useRouter();
   const [isSpeaking ,setIsSpeaking]=useState(false);
   const [callStatus , setCallStatus]=useState<CallStatus>(CallStatus.INACTIVE);
-  // const [messages , setMessages]=useState<SavedMessage[]>([]);
-
+  const [messages , setMessages]=useState<SavedMessage[]>([]);
+  
+  
   useEffect(()=>{
-    const onCallStart=()=>setCallStatus(CallStatus.ACTIVE);
-    const onCallEnd=()=>setCallStatus(CallStatus.FINISHED);
+
+    const onCallStart=()=>setCallStatus(CallStatus.ACTIVE); //what happens when call starts
+    const onCallEnd=()=>setCallStatus(CallStatus.FINISHED);  //what happens when call ends
 
 
     const onMessage=(message:Message)=>{
-      if(message.type==="transcript" && message.transcriptType==="final"){
+      if(message.type==="transcript" && message.transcriptType==="final"){  // we can save it some more
         const newMessage={role:message.role  , content: message.transcript}
 
-        // setMessages((prev)=> [...prev ,  newMessage]);
+         setMessages((prev)=> [...prev ,  newMessage]); //spread the previous message and append the new message
 
       }
     }
@@ -53,7 +58,8 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
     vapi.on("speech-end" ,onSpeechEnd);
     vapi.on("error" , onError );
 
-    return ()=>{
+    //clean up function
+    return ()=>{ //closing all the listeners on unmount
     vapi.off("call-start" , onCallStart);
     vapi.off("call-end" ,onCallEnd);
     vapi.off("message" ,onMessage);
@@ -62,20 +68,34 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
     }
   } ,[])
 
-  // useEffect(()=>{
-  //     if(callStatus==CallStatus.FINISHED) router.push("/");
-  // } ,[messages ,callStatus , type , userId]);
+
+ //after the call ends take the user back to the home page so that they can see their fully generated interview
+  useEffect(()=>{
+      if(callStatus==CallStatus.FINISHED) router.push("/");
+  } ,[messages ,callStatus , type , userId]);
 
 
+   //start the call function
   const handleCall=async()=>{
     setCallStatus(CallStatus.CONNECTING);
 
+    await vapi.start(process.env.NEXT_PUBLIC_VAPI_WORKFLOW_ID ,{
+       variableValues:{
+       username:userName,
+       userid:userId
+       }
+    });
+    
   }
-
-
-  const messages=["hi i am amber" ,"hi how are you"]
+ 
+  //dissconnecting the call
+  const handleDisconnect=async()=>{
+   setCallStatus(CallStatus.FINISHED);
+   vapi.stop();
+  }
   
-  const lastMessage=messages[messages.length-1];
+  const latestMessage=messages[messages.length-1]?.content;
+  const isCallInactiveOrFinished= callStatus===CallStatus.INACTIVE || callStatus===CallStatus.FINISHED;
 
   return (
   <>  
@@ -103,10 +123,10 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
   <div className="transcript-border w-[70%] m-2">
     <div className="transcript w-full">
       <p
-        key={lastMessage}
+        key={latestMessage}
         className="animate-fadeIn transition-opacity duration-500"
       >
-        {lastMessage}
+        {latestMessage}
       </p>
     </div>
   </div>
@@ -115,13 +135,14 @@ const Agent = ({userName ,userId ,type}:AgentProps) => {
 
 
        {callStatus !== CallStatus.ACTIVE ? (
-     <button className="relative btn-call">
+     <button className="relative btn-call" onClick={handleCall}>
+      <span className={cn('absolute animate-ping rounded-sull opacity-75' , callStatus!=='CONNECTING' && 'hidden')}/>
       <span>
-        {callStatus === CallStatus.INACTIVE || callStatus === CallStatus.FINISHED ? "Call" : "..."}
-      </span>
+    {isCallInactiveOrFinished ? 'Call' : '...'}
+     </span>
      </button>   
        ):( 
-        <button className="btn-disconnect">END</button>
+        <button className="btn-disconnect" onClick={handleDisconnect}>END</button>
        )}
 
       

@@ -68,11 +68,24 @@ export const authOptions: NextAuthOptions={
         async jwt({token ,user}: {token: JWT, user: any}){
 
             //my strategy is to inculcate as much data as i can in the TOKEN so that i have to minimize the db queries i.e whatever i want to have i can fethc it directly from the jwt payload4
+//Case 1: Credential login ..
+          if (user) {
+    token._id = user._id?.toString();
+    token.email = user.email;
+    token.name = user.name;
+    return token;
+  }
 
-             if(user){
-                token._id=user._id?.toString();
-                token.email=user.email;
-               }
+  // Case 2: OAuth login → user._id does NOT exist
+  if (!token._id && token.email) {
+    const existingUser = await UserModel.findOne({ email: token.email });
+
+    if (existingUser) {
+      token._id = existingUser._id.toString();
+      token.name = existingUser.name;
+      token.email = existingUser.email;
+    }
+  }
             return token;
         },
         //token se jo bhi info mili wo session me shift krdi
