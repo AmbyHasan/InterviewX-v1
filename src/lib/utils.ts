@@ -2,6 +2,7 @@ import { interviewCovers ,mappings } from "../constants";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -19,6 +20,7 @@ const normalizeTechName = (tech: string) => {
 
 //for returning the logos
 export const getTechLogos = async (techArray: string[]) => {
+    if (!Array.isArray(techArray)) return []; // .map can only work on arrays
   const logoURLs = techArray.map((tech) => {
     const normalized = normalizeTechName(tech);
     return {
@@ -26,6 +28,7 @@ export const getTechLogos = async (techArray: string[]) => {
       url: `${techIconBaseURL}/${normalized}/${normalized}-original.svg`,
     };
   });
+  
 
 //--------------------------------------------------------------------------------------------------------------------
 

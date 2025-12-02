@@ -17,7 +17,7 @@ export async function middleware(request: NextRequest) {
 
   // Block protected pages if user not logged in
   if (isProtected && !token) {
-    return NextResponse.redirect(new URL("/sign-in", request.url));
+    return NextResponse.redirect(new URL("/landingPage", request.url));
   }
 
   return NextResponse.next();

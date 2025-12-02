@@ -12,7 +12,7 @@ const InterviewCard = ({interviewId , userId , role , type , techstack , created
 
   const feedback=null as Feedback | null ;
   const normalizedType= /mix/gi.test(type) ? "Mixed" : type;
-  const formattedDate=dayjs(feedback?.createdAt || createdAt || Date.now()).format("DD/MM/YYYY");
+  const formattedDate=dayjs(feedback?.createdAt || createdAt?.toString() || Date.now()).format("DD/MM/YYYY");
 
   return (
     <div className="card-border w-[360px] max-sm:w-full min-h-96 m-3">
@@ -24,7 +24,7 @@ const InterviewCard = ({interviewId , userId , role , type , techstack , created
 
                 <Image src={getRandomInterviewCover()} alt="cover image" width={90} height={90} className="rounded-full object-fit size-[90px]"/>
                 <h3 className="mt-5 capitalize">
-                  {role} Interview
+                 {role} Interview
                 </h3>
                 <div className="flex flex-row gap-5 mt-3">
                   <div className="flex flex-row gap-2">

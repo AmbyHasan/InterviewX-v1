@@ -495,7 +495,10 @@ li {
   color: #ffffff;                /* text-white */
 }
 
-
+.fade-soft {
+  mask-image: radial-gradient(circle, white 60%, transparent 100%);
+  -webkit-mask-image: radial-gradient(circle, white 60%, transparent 100%);
+}
 
 
 

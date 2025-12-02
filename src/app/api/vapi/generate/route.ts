@@ -1,6 +1,6 @@
 import dbConnect from "@/src/lib/dbConnect";
 import { getRandomInterviewCover } from "@/src/lib/utils";
-import Interview from "@/src/models/Interview";
+import Interview from "@/src/models/Interviews";
 import {google} from "@ai-sdk/google";
 import { generateText } from 'ai';
 import { getServerSession } from "next-auth";
