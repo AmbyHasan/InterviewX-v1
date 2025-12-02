@@ -3,7 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import InterviewCard from '@/src/components/InterviewCard'
 import { getCurrentUser } from '@/src/models/User'
-import { getInterviewByUserId, getLatestInterviews } from '@/src/lib/actions/actions'
+import { getInterviewByUserId, getLatestInterviews } from '@/src/lib/actions/action'
 
 
 
