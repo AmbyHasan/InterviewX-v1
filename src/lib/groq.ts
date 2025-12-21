@@ -1,3 +1,4 @@
+export const runtime = "nodejs"
 import Groq from "groq-sdk";
 
 export const groq = new Groq({
