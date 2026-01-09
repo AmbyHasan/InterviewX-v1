@@ -2,21 +2,12 @@
 import  { useEffect, useRef } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
+
 
 export default function landingPage() {
 
 
-  const searchParams = useSearchParams()
-  //for displaying the log out toast when the user logs out
-  useEffect(() => {
-    if (searchParams.get("loggedOut") === "true") {
-      toast.success("Logged out successfully")
-    }
-  }, [searchParams])
-
-  ;
+  
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const orbsRef = useRef<HTMLDivElement>(null);
 
