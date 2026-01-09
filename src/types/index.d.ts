@@ -1,6 +1,10 @@
 import NextAuth, { DefaultSession } from "next-auth";
+//types for prisma
+import { PrismaClient } from "../generated/prisma";
+import onboardingForm from '@/src/components/OnboardingForm';
 
-interface FeedbackType {
+
+export interface FeedbackType {
   id: string;
   interviewId: string;
   userId:string;
@@ -16,7 +20,7 @@ interface FeedbackType {
   createdAt: string;
 }
 
-interface Category{
+export interface Category{
   name: "Communication Skills" | "Technical Knowledge" | "Problem Solving" | "Cultural Fit" | "Confidence and Clarity";
   score: number;
  comment:string;
@@ -24,21 +28,21 @@ interface Category{
 
 
 
-interface CreateFeedbackParams {
+export interface CreateFeedbackParams {
   interviewId: string;
   userId: string;
   transcript: { role: string; content: string }[];
   feedbackId?: string;
 }
 
-interface User {
+export interface User {
   name: string;
   email: string;
   id: string;
 }
 
 //for the interview card which is displayed at the home page
-interface InterviewCardProps {
+export interface InterviewCardProps {
   interviewId?: string;
   userId?: string;
   role: string;
@@ -47,7 +51,7 @@ interface InterviewCardProps {
   createdAt?: string;
 }
 
-interface AgentProps {
+export interface AgentProps {
   userName: string;
   userId?: string;
   interviewId?: string;
@@ -58,27 +62,27 @@ interface AgentProps {
 
 
 //for the route of feedback page
-interface RouteParams {
+export interface RouteParams {
   params: Promise<Record<string, string>>;
   searchParams: Promise<Record<string, string>>;
 }
 
-interface GetFeedbackByInterviewIdParams {
+export interface GetFeedbackByInterviewIdParams {
   interviewId: string;
   userId: string;
 }
 
-interface GetLatestInterviewsParams {
+export interface GetLatestInterviewsParams {
   userId: string;
   limit?: number;
 }
 
-interface SignInParams {
+export interface SignInParams {
   email: string;
   idToken: string;
 }
 
-interface SignUpParams {
+export interface SignUpParams {
   uid: string;
   name: string;
   email: string;
@@ -87,7 +91,7 @@ interface SignUpParams {
 
 type FormType = "sign-in" | "sign-up";
 
-interface InterviewFormProps {
+export interface InterviewFormProps {
   interviewId: string;
   role: string;
   level: string;
@@ -97,7 +101,7 @@ interface InterviewFormProps {
 }
 
 //for displaying the tech icons in InterviewCard
-interface TechIconProps {
+export interface TechIconProps {
   techStack: string[];
 }
 
@@ -135,3 +139,25 @@ export interface Interview extends Document{
   createdAt :Date;
   updatedAt: Date
 }
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+//TOOLS TYPES
+
+export interface onboardingStatus{
+  isOnboarded: boolean;
+}
+
+export interface Industry{
+   id: string;
+  name: string;
+  subIndustries: string[];
+}
+
+export interface OnboardingFormProps{
+  industries : Industry[];
+}
+
+

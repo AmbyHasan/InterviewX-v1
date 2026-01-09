@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     url.pathname.startsWith("/sign-in") ||
     url.pathname.startsWith("/sign-up");
 
-  const protectedRoutes = ["/", "/interview"];
+  const protectedRoutes = ["/", "/interview" ,"/authenticatedLandingPage" , "interview/:id/feedback" ,"/interview/:id"];
   const isProtected = protectedRoutes.includes(url.pathname);
 
   // Always allow auth pages

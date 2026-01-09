@@ -191,6 +191,7 @@ li {
   padding: 0 1.25rem;
   cursor: pointer;
   min-height: 2.5rem;
+  margin:4px;
 }
 .btn-primary:hover {
   background-color: gray;
@@ -200,12 +201,13 @@ li {
 
 .btn-secondary {
   background-color: var(--color-dark-200);
-  color: var(--color-primary-200);
+  color:  white ;
   border-radius: 9999px;
   font-weight: 700;
   padding: 0 1.25rem;
   cursor: pointer;
   min-height: 2.5rem;
+  margin:4px;
 }
 
 .btn-secondary:hover {
@@ -538,6 +540,95 @@ li {
     align-items: center;         /* max-sm:items-center */
   }
 }
+
+
+
+/* Landing page  */
+
+      @keyframes float {
+          0%, 100% { transform: translateY(0px) rotateZ(0deg); }
+          50% { transform: translateY(-20px) rotateZ(5deg); }
+        }
+
+        @keyframes shimmer {
+          0%, 100% { filter: brightness(1); }
+          50% { filter: brightness(1.3); }
+        }
+
+        @keyframes pulse {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.1); }
+        }
+
+        @keyframes move {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .logo-float {
+          animation: float 6s ease-in-out infinite;
+        }
+
+        .shimmer-text {
+          animation: shimmer 3s ease-in-out infinite;
+        }
+
+        .pulse-icon {
+          animation: pulse 2s ease-in-out infinite;
+        }
+
+        .orb {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(80px);
+          opacity: 0.3;
+          animation: move 20s ease-in-out infinite;
+        }
+
+        .orb1 {
+          width: 400px;
+          height: 400px;
+          background: #1e3a8a;
+          top: 10%;
+          left: 10%;
+          animation-delay: 0s;
+        }
+
+        .orb2 {
+          width: 350px;
+          height: 350px;
+          background: #3b82f6;
+          bottom: 10%;
+          right: 10%;
+          animation-delay: 3s;
+        }
+
+        .orb3 {
+          width: 300px;
+          height: 300px;
+          background: #60a5fa;
+          top: 50%;
+          left: 50%;
+          animation-delay: 6s;
+        }
+
+        .gradient-text {
+          background: linear-gradient(135deg, #1e3a8a, #3b82f6, #60a5fa);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+        }
+
+        .feature-card {
+          transition: all 0.5s;
+          transform-style: preserve-3d;
+        }
+
+        .btn-3d {
+          transform-style: preserve-3d;
+          transition: all 0.3s;
+        }
 
 
 

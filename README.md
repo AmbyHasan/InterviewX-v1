@@ -192,3 +192,20 @@ The project can be deployed seamlessly on **Vercel**.
 2. Import the project into **Vercel**  
 3. Add all required environment variables in the Vercel dashboard  
 4. Deploy 🎉
+
+
+             ┌───────────────┐
+             │   NextAuth    │
+             │ (Auth Layer)  │
+             └───────┬───────┘
+                     │
+               session.user.id
+                     │
+        ┌────────────┴────────────┐
+        │                         │
+ ┌──────▼──────┐           ┌──────▼──────┐
+ │  MongoDB    │           │   Neon DB   │
+ │ InterviewX  │           │ Tools Data  │
+ │ (Interviews)│           │ (Resume etc)│
+ └─────────────┘           └─────────────┘
+

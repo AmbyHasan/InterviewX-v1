@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+
+// designing the models
+
+model User {
+  id            String    @id @default(uuid())
+  authUserId    String    @unique // mongodb user id for the authenticated users
+  email         String    @unique
+  name          String?
+  imageUrl      String?
+  industry      String?    // Combined industry-subindustry (e.g., "tech-software-development")
+  industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Profile fields
+  bio           String?
+  experience    Int?      // Years of experience
+
+
+ 
+  // Relations
+  skills        String[]  // Array of skills 
+  assessments   Assessment[]  //a user can have multiple assessments
+  resume        Resume?   //a user can only have a single resume
+  coverLetter   CoverLetter[]  //a user can have multiple cv's
+}
+
+
+
+
+
+
+model Assessment {
+  id            String    @id @default(cuid())
+  userId        String    //the id to whome the assesment belongs to
+  user          User      @relation(fields: [userId], references: [id]) //it is a foreign key , inside this table we have userId which regernces the id from the User table
+  quizScore     Float     // Overall quiz score
+  questions     Json[]    // Array of {question, answer, userAnswer, isCorrect}
+  category      String    // "Technical", "Behavioral", etc.
+  improvementTip String?  // AI-generated improvement tip
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId])  //indexing with userId
+}
+
+model Resume {
+  id          String    @id @default(cuid())
+  userId      String    @unique    // One resume per user
+  user        User      @relation(fields: [userId], references: [id])
+  content     String    @db.Text // Markdown content
+  atsScore    Float?
+  feedback    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model CoverLetter {
+  id              String    @id @default(cuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id]) //foreign key
+  content         String    // Markdown content of the CV
+  jobDescription  String?
+  companyName     String    // Name of the company applying to
+  jobTitle        String    // Position applying for
+  status          String    @default("draft") // draft, completed
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId])  //indexing with userId
+}
+
+
+
+// Combined Industry Trends and Salary Insights
+model IndustryInsight {
+  id            String    @id @default(cuid())
+  industry      String    @unique  // The industry this data belongs to (e.g., "tech-software-development")
+  
+  // Users in this industry
+  users         User[]
+  
+  // Salary data
+  salaryRanges  Json[]    // Array of { role: string, min: float, max: float, median: float, location: string? }  ,over here ->min ,max ,median are the salaries
+  
+  // Industry trends
+  growthRate    Float     // Industry growth rate
+  demandLevel   DemandLevel   // "High", "Medium", "Low"
+  topSkills     String[]  // Most in-demand skills
+  
+  // Market conditions
+  marketOutlook MarketOutlook   // "Positive", "Neutral", "Negative"
+  keyTrends     String[]  // Array of current industry trends
+  
+  // Learning suggestions
+  recommendedSkills String[]  // Skills recommended for the industry
+  
+  lastUpdated   DateTime  @default(now())
+  nextUpdate    DateTime  // Scheduled update time
+
+  @@index([industry])
+}
+
+enum DemandLevel{
+  HIGH 
+  MEDIUM 
+  LOW
+}
+
+enum MarketOutlook{
+   POSITIVE 
+   NEGATIVE 
+   NEUTRAL
+}

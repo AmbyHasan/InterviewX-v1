@@ -16,6 +16,7 @@ import { AxiosError } from "axios";
 import axios from "axios";
 import { signIn } from "next-auth/react";
 import { FormType } from "../types"
+import { Loader2 } from 'lucide-react';
 
 
 //defining the zod schema for sign in and sign up
@@ -34,8 +35,10 @@ const AuthForm = ({type}:{type:FormType}) => {
 
     const formSchema= authFormSchema(type) ;
     const router=useRouter();
-    
-   const[isSubmitting, setIsSubmitting]=useState(false);
+     
+   const[isSubmitting, setIsSubmitting]=useState(false); //states for signUp and signIn buttons
+   const [loadingProvider, setLoadingProvider] = useState<null | "google" | "github">(null) //states for github and google sign in buttons
+
 
    const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,6 +48,12 @@ const AuthForm = ({type}:{type:FormType}) => {
       password:""
     },
   })
+
+  const handleProviderSignIn = async (provider: "google" | "github") => {
+  setLoadingProvider(provider)
+  await signIn(provider, { callbackUrl: "/authenticatedLandingPage" })
+}
+
  
 
   //here we will write the function that we want to be performed when the user submits the form
@@ -89,7 +98,7 @@ const AuthForm = ({type}:{type:FormType}) => {
 
         }else{
 
-           
+    setIsSubmitting(true);       
    const result=  await signIn("credentials" , {
         redirect:false,
         identifier: data.email, //email is our indentifier
@@ -98,18 +107,21 @@ const AuthForm = ({type}:{type:FormType}) => {
     if(result?.error){
         toast("Login failed");
     }
-    //we get sign in url after successful login
+    //we get sign-in url after successful login
    if (result?.url) {
    toast.success("Signed in successfully!");
-   router.replace("/");
+   router.replace("authenticatedLandingPage");
 }}
-
 
 
       }catch(error){
         console.log(error);
         toast.error(`There was an error:${error}`);
-      }}
+      }
+      finally{
+        setIsSubmitting(false);
+      }
+    }
   
 
 
@@ -122,8 +134,8 @@ const AuthForm = ({type}:{type:FormType}) => {
   const isSignIn = type=== "sign-in"
   return (
 
-  <div className="card-border lg:min-w-[566px]">
- <div className="flex flex-col gap-6 card py-14 px-10 justiy-center items-center">
+  <div className="card-border lg:min-w-141.5">
+ <div className="flex flex-col gap-6 card py-14 px-10 justify-center items-center">
   <div className="flex flex-row gap-2 justiy-center items-center bg-gray-950 p-3 rounded-full">
     <Image src="/logo.png" alt="logo" height={32} width={38} className="mask-img"/>
     <h2 className="text-primary-100">InterviewX</h2>
@@ -157,26 +169,61 @@ const AuthForm = ({type}:{type:FormType}) => {
          placeholder="Enter your password"/> 
 
    
-        <Button type="submit" className="btn">{isSignIn ? "Sign In" : "Create an Account"}</Button>
+        <Button type="submit" className="btn" disabled={isSubmitting}>
+          {
+            isSubmitting ?(
+               <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+            ): (isSignIn ? "Sign In" : "Create an Account")
+
+            }
+            
+         
+          </Button>
 
         <div className="flex flex-col gap-4 w-full mt-4">
-  <Button
-    type="button"
-    className="btn-secondary w-full rounded-full"
-    onClick={() => signIn("google", { callbackUrl: "/" })}
-  >
-    <Image src="/google.svg" width={20} height={20} alt="google" className="mr-2" />
-    Sign in with Google
-  </Button>
 
   <Button
     type="button"
     className="btn-secondary w-full rounded-full"
-    onClick={() => signIn("github", { callbackUrl: "/" })}
+    disabled={loadingProvider === "google"}
+    onClick={() => handleProviderSignIn("google")}  
   >
-    <Image src="/github.svg" width={20} height={20} alt="github" className="mr-2" />
-    Sign in with GitHub
+
+ {loadingProvider === "google" ? (
+    <>
+      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+      Signing in...
+    </>
+  ) : (
+    <>
+      <Image src="/google.svg" width={20} height={20} alt="google" className="mr-2" />
+      Sign in with Google
+    </>
+  )}
   </Button>
+
+
+
+  <Button
+    type="button"
+    className="btn-secondary w-full rounded-full"
+    disabled={loadingProvider === "github"}
+      onClick={() => handleProviderSignIn("github")}
+
+  >
+   {loadingProvider === "github" ? (
+    <>
+      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+      Signing in...
+    </>
+  ) : (
+    <>
+      <Image src="/github.svg" width={20} height={20} alt="github" className="mr-2" />
+      Sign in with GitHub
+    </>
+  )}
+  </Button>
+
 </div>
 
       </form>

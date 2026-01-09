@@ -30,13 +30,18 @@ export const authOptions: NextAuthOptions={
 
             //designing the custom method for authorizing the credentials
             async authorize(credentials:any):Promise<any>{
-                await dbConnect();
+                // await dbConnect();
+                const client = await clientPromise;
+                 const db = client.db();
+
 
                 try{
                        //find the user in db using the credential ie  the email
-                     const user = await UserModel.findOne({
-                                 email : credentials.identifier 
-                          })
+                    //here we are using mongodb adapter for querying our database
+                    
+const user = await db.collection("users").findOne({
+  email: credentials.identifier,
+});
 
                         if(!user){
                             throw new Error("No user found with this email");
@@ -83,11 +88,22 @@ export const authOptions: NextAuthOptions={
     token.name = user.name;
     return token;
   }
-
+   
+               
   // Case 2: OAuth login → user._id does NOT exist
+
+    const client = await clientPromise; //mongodb client
+    const db = client.db();
+
+
   if (!token._id && token.email) {
     //since the email exists it means that the user is in the database  ,now hop inside the mongodb and get the user id from there
-    const existingUser = await UserModel.findOne({ email: token.email });
+
+
+    const existingUser = await db.collection("users").findOne({
+  email: token.email,
+});
+
 
     if (existingUser) {
       token._id = existingUser._id.toString();

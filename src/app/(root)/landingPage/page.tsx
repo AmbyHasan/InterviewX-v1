@@ -2,8 +2,21 @@
 import  { useEffect, useRef } from 'react';
 import Link from "next/link";
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function landingPage() {
+
+
+  const searchParams = useSearchParams()
+  //for displaying the log out toast when the user logs out
+  useEffect(() => {
+    if (searchParams.get("loggedOut") === "true") {
+      toast.success("Logged out successfully")
+    }
+  }, [searchParams])
+
+  ;
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const orbsRef = useRef<HTMLDivElement>(null);
 
@@ -117,93 +130,7 @@ export default function landingPage() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      <style>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotateZ(0deg); }
-          50% { transform: translateY(-20px) rotateZ(5deg); }
-        }
-
-        @keyframes shimmer {
-          0%, 100% { filter: brightness(1); }
-          50% { filter: brightness(1.3); }
-        }
-
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.1); }
-        }
-
-        @keyframes move {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-
-        .logo-float {
-          animation: float 6s ease-in-out infinite;
-        }
-
-        .shimmer-text {
-          animation: shimmer 3s ease-in-out infinite;
-        }
-
-        .pulse-icon {
-          animation: pulse 2s ease-in-out infinite;
-        }
-
-        .orb {
-          position: absolute;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.3;
-          animation: move 20s ease-in-out infinite;
-        }
-
-        .orb1 {
-          width: 400px;
-          height: 400px;
-          background: #1e3a8a;
-          top: 10%;
-          left: 10%;
-          animation-delay: 0s;
-        }
-
-        .orb2 {
-          width: 350px;
-          height: 350px;
-          background: #3b82f6;
-          bottom: 10%;
-          right: 10%;
-          animation-delay: 3s;
-        }
-
-        .orb3 {
-          width: 300px;
-          height: 300px;
-          background: #60a5fa;
-          top: 50%;
-          left: 50%;
-          animation-delay: 6s;
-        }
-
-        .gradient-text {
-          background: linear-gradient(135deg, #1e3a8a, #3b82f6, #60a5fa);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        .feature-card {
-          transition: all 0.5s;
-          transform-style: preserve-3d;
-        }
-
-        .btn-3d {
-          transform-style: preserve-3d;
-          transition: all 0.3s;
-        }
-      `}</style>
-
+      
       {/* Background Decoration */}
       <div ref={orbsRef} className="fixed top-0 left-0 w-full h-full pointer-events-none z-[1]">
         <div className="orb orb1"></div>
@@ -212,7 +139,7 @@ export default function landingPage() {
       </div>
 
       {/* Navbar */}
-      <nav className="fixed top-0 w-full px-12 py-5 flex  items-center z-[1000] bg-black/80 backdrop-blur-md">
+      <nav className="fixed top-0 w-full px-12 py-5 flex z-[1000] bg-black/80 backdrop-blur-md">
        <Image src="/logo.png" alt="Logo" height={32} width={38} ></Image>
         <div className="text-3xl text-white font-bold ml-2 ">InterviewX</div>
         
@@ -234,7 +161,7 @@ export default function landingPage() {
           
           <div className="flex gap-5 justify-center">
             <Link href="/sign-up">
-            <button className="px-10 py-4 text-lg rounded-full bg-gradient-to-r from-blue-900 to-blue-500 text-white shadow-lg shadow-blue-500/40 btn-3d hover:scale-105 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/60">
+            <button className="px-10 py-4 text-lg rounded-full bg-linear-to-r from-blue-900 to-blue-500 text-white shadow-lg shadow-blue-500/40 btn-3d hover:scale-105 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-500/60">
               Get Started
             </button>
             </Link>
@@ -262,10 +189,7 @@ export default function landingPage() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="text-center py-10 bg-black/90 text-gray-500">
-        <p>&copy; 2025 InterviewX by Amber Hasan</p>
-      </footer>
+
     </div>
   );
 }
